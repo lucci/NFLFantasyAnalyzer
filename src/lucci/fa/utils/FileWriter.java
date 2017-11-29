@@ -443,10 +443,21 @@ public class FileWriter {
 				}
 			}
 		}
-		FileOutputStream fileOut = new FileOutputStream(excelFileName);
-		wb.write(fileOut);
-		fileOut.flush();
-		wb.close();
-		fileOut.close();
+		
+		FileOutputStream fileOut = null;
+		try {
+			fileOut = new FileOutputStream(excelFileName);
+			wb.write(fileOut);
+		} catch (Exception e) {
+			throw new IOException(e);
+		} finally {
+			if (fileOut != null) {
+				fileOut.flush();
+				fileOut.close();
+			}
+			if (wb != null) {
+				wb.close();
+			}
+		}
 	}
 }
