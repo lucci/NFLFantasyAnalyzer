@@ -448,7 +448,7 @@ public class FileWriter {
 		try {
 			fileOut = new FileOutputStream(excelFileName);
 			wb.write(fileOut);
-		} catch (Exception e) {
+		} catch(Exception e) {
 			throw new IOException(e);
 		} finally {
 			if (fileOut != null) {

@@ -46,11 +46,11 @@ public class WebScraper {
 	}
 	
 	// initializes and stores URL content for processing
-	public void initializeRecordAndTopPlayerURL(String recAndPlayerURL) {
+	public void initializeRecordAndTopPlayerURL(String recAndPlayerURL) throws IOException{
 		try {
 			this.recAndPlayerURL = Jsoup.connect(recAndPlayerURL).get();
 		} catch(IOException e) {
-			e.printStackTrace();
+			throw new IOException("Error initializing RecordAndTopPlayerURL", e);
 		}
 	}
 	
@@ -138,14 +138,14 @@ public class WebScraper {
 	}
 	
 	// initializes and stores URL content for processing
-	public void initializeOverallRankURLs(String OPassingURL, String DPassingURL, String ORushingURL, String DRushingURL) {
+	public void initializeOverallRankURLs(String OPassingURL, String DPassingURL, String ORushingURL, String DRushingURL) throws IOException {
 		try {
 			oPassingURL = Jsoup.connect(OPassingURL).get();
 			dPassingURL = Jsoup.connect(DPassingURL).get();
 			oRushingURL = Jsoup.connect(ORushingURL).get();
 			dRushingURL = Jsoup.connect(DRushingURL).get();
 		} catch(IOException e) {
-			e.printStackTrace();
+			throw new IOException("Error initializing OverallRankURLs", e);
 		}
 	}
 	
@@ -229,7 +229,7 @@ public class WebScraper {
 	}
 	
 	// initializes and stores URL content for processing
-	public void initializePointsGivenToPositionURLS(String qbURL, String rbURL, String wrURL, String teURL, String kURL, String dURL) {
+	public void initializePointsGivenToPositionURLS(String qbURL, String rbURL, String wrURL, String teURL, String kURL, String dURL) throws IOException{
 		try {
 			qbPointsAllowedURL = Jsoup.connect(qbURL).get();
 			rbPointsAllowedURL = Jsoup.connect(rbURL).get();
@@ -238,7 +238,7 @@ public class WebScraper {
 			kPointsAllowedURL = Jsoup.connect(kURL).get();
 			defPointsAllowedURL = Jsoup.connect(dURL).get();
 		} catch(IOException e) {
-			e.printStackTrace();
+			throw new IOException("Error initializing PointsGivenToPositionURLS", e);
 		}
 	}
 	

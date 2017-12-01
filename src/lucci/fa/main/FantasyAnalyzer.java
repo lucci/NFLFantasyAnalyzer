@@ -57,17 +57,27 @@ public class FantasyAnalyzer {
 		
 		// grab record and top players
 		for (Team team : teams) {
-			scraper.initializeRecordAndTopPlayerURL("http://www.espn.com/nfl/team/stats/_/name/" + team.getAbbrev() + '/' + team.getCity() + '-' + team.getName());
+			try {
+				scraper.initializeRecordAndTopPlayerURL("http://www.espn.com/nfl/team/stats/_/name/" + team.getAbbrev() + '/' + team.getCity() + '-' + team.getName());
+			} catch(IOException e) {
+				System.out.println(e.getMessage());
+				System.exit(1);
+			}
 			scraper.populateRecord(team);
 			scraper.populateTopPlayers(team);
 		}
 		scraper.destroyRecordAndTopPlayerURL();
 		
 		// initialize URLs for the logic after
-		scraper.initializeOverallRankURLs("http://www.espn.com/nfl/statistics/team/_/stat/passing", 
-				"http://www.espn.com/nfl/statistics/team/_/stat/passing/position/defense", 
-				"http://www.espn.com/nfl/statistics/team/_/stat/rushing", 
-				"http://www.espn.com/nfl/statistics/team/_/stat/rushing/position/defense");
+		try {
+			scraper.initializeOverallRankURLs("http://www.espn.com/nfl/statistics/team/_/stat/passing", 
+					"http://www.espn.com/nfl/statistics/team/_/stat/passing/position/defense", 
+					"http://www.espn.com/nfl/statistics/team/_/stat/rushing", 
+					"http://www.espn.com/nfl/statistics/team/_/stat/rushing/position/defense");
+		} catch(IOException e) {
+			System.out.println(e.getMessage());
+			System.exit(1);
+		}
 		
 		// grab various ranks
 		for (Team team : teams) {
@@ -76,12 +86,17 @@ public class FantasyAnalyzer {
 		scraper.destroyOverallRankURLs();
 		
 		// initialize URLs for the logic after
-		scraper.initializePointsGivenToPositionURLS("http://games.espn.com/ffl/pointsagainst?positionId=1&statview=averages",
-				"http://games.espn.com/ffl/pointsagainst?positionId=2&statview=averages",
-				"http://games.espn.com/ffl/pointsagainst?positionId=3&statview=averages",
-				"http://games.espn.com/ffl/pointsagainst?positionId=4&statview=averages",
-				"http://games.espn.com/ffl/pointsagainst?positionId=5&statview=averages",
-				"http://games.espn.com/ffl/pointsagainst?positionId=16&statview=averages");
+		try {
+			scraper.initializePointsGivenToPositionURLS("http://games.espn.com/ffl/pointsagainst?positionId=1&statview=averages",
+					"http://games.espn.com/ffl/pointsagainst?positionId=2&statview=averages",
+					"http://games.espn.com/ffl/pointsagainst?positionId=3&statview=averages",
+					"http://games.espn.com/ffl/pointsagainst?positionId=4&statview=averages",
+					"http://games.espn.com/ffl/pointsagainst?positionId=5&statview=averages",
+					"http://games.espn.com/ffl/pointsagainst?positionId=16&statview=averages");
+		} catch(IOException e) {
+			System.out.println(e.getMessage());
+			System.exit(1);
+		}
 		
 		// ArrayList containing matchups
 		ArrayList<Matchup> matchups = new ArrayList<Matchup>();
@@ -105,8 +120,10 @@ public class FantasyAnalyzer {
 		try {
 			FileWriter.writeXLSXFile(matchups);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			// Using full stack trace for more precise error tracing regarding file writing
 			e.printStackTrace();
+			System.exit(1);
 		}
+		System.out.println("Done! File should be created at desired location.");
 	}
 }
