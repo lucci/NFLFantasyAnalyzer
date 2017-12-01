@@ -1,5 +1,6 @@
 package lucci.fa.utils;
 
+import java.awt.Color;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -490,6 +492,48 @@ public class FileWriter {
 			sheet.autoSizeColumn(17);
 			sheet.autoSizeColumn(18);
 			sheet.autoSizeColumn(19);
+			
+			/*
+			 * #######################################################################
+			 * Experimental styling code begins here
+			 * #######################################################################
+			 */
+			
+			int homePassingRank = matchup.getHome().getoPassRank();
+			int homeRushingRank = matchup.getHome().getoRushRank();
+			//int homePassingRankD = matchup.getHome().getdPassRank();
+			//int homeRushingRankD = matchup.getHome().getdRushRank();
+			int homeFpQB = matchup.getHome().getFpToQBRank();
+			int homeFpRB = matchup.getHome().getFpToRBRank();
+			int homeFpWR = matchup.getHome().getFpToWRRank();
+			int homeFpTE = matchup.getHome().getFpToTERank();
+			
+			int awayPassingRank = matchup.getAway().getoPassRank();
+			int awayRushingRank = matchup.getAway().getoRushRank();
+			//int awayPassingRankD = matchup.getAway().getdPassRank();
+			//int awayRushingRankD = matchup.getAway().getdRushRank();
+			int awayFpQB = matchup.getAway().getFpToQBRank();
+			int awayFpRB = matchup.getAway().getFpToRBRank();
+			int awayFpWR = matchup.getAway().getFpToWRRank();
+			int awayFpTE = matchup.getAway().getFpToTERank();
+			XSSFColor tabColor = new XSSFColor(Color.YELLOW);
+			
+			if(homePassingRank <= 15 && (awayFpQB <= 5 || awayFpWR <= 5 || awayFpTE <= 5)) {
+				sheet.setTabColor(tabColor);
+			} else if(homeRushingRank <= 15 && awayFpRB <= 5) {
+				sheet.setTabColor(tabColor);
+			} else if(awayPassingRank <= 15 && (homeFpQB <= 5 || homeFpWR <= 5 || homeFpTE <= 5)) {
+				sheet.setTabColor(tabColor);
+			} else if(awayRushingRank <= 15 && homeFpRB <= 5) {
+				sheet.setTabColor(tabColor);
+			}
+			
+			/*
+			 * #######################################################################
+			 * Experimental styling code ends here
+			 * #######################################################################
+			 */
+			
 		}
 		
 		FileOutputStream fileOut = null;
