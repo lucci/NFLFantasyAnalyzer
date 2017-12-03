@@ -1,10 +1,15 @@
 package lucci.fa.utils;
 
+import java.awt.Color;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFColor;
+import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -18,24 +23,37 @@ public class FileWriter {
 	public static void writeXLSXFile(ArrayList<Matchup> matchups) throws IOException {
 		
 		// absolute path to where the file should be written - use the .xlsx extension
-		String excelFileName = "";
+		String excelFileName = "/Users/Mike/Desktop/Matchups.xlsx";
 
 		XSSFWorkbook wb = new XSSFWorkbook();
 		
 		for (Matchup matchup : matchups) {
 			XSSFSheet sheet = wb.createSheet(matchup.getAway().getName() + "@" + matchup.getHome().getName());
 			
+			XSSFCellStyle boldStyle = wb.createCellStyle();
+			XSSFFont boldFont = wb.createFont();
+			boldFont.setBold(true);
+			boldStyle.setFont(boldFont);
+			boldStyle.setAlignment(HorizontalAlignment.CENTER);
+			
+			XSSFCellStyle centerStyle = wb.createCellStyle();
+			XSSFFont centerFont = wb.createFont();
+			centerStyle.setFont(centerFont);
+			centerStyle.setAlignment(HorizontalAlignment.CENTER);
+			
 			XSSFRow names = sheet.createRow(0);
 			XSSFCell awayName = names.createCell(0);
 			XSSFCell homeName = names.createCell(11);
 			awayName.setCellValue(matchup.getAway().getName());
 			homeName.setCellValue(matchup.getHome().getName());
+			applyStyleToRange(sheet, boldStyle, 0, 0, 0, 11);
 			
 			XSSFRow records = sheet.createRow(1);
 			XSSFCell awayRec = records.createCell(0);
 			XSSFCell homeRec = records.createCell(11);
 			awayRec.setCellValue(Integer.toString(matchup.getAway().getWin()) + '-' + Integer.toString(matchup.getAway().getLoss()));
 			homeRec.setCellValue(Integer.toString(matchup.getHome().getWin()) + '-' + Integer.toString(matchup.getHome().getLoss()));
+			applyStyleToRange(sheet, centerStyle, 1, 0, 1, 11);
 			
 			XSSFRow ranksTitle = sheet.createRow(3);
 			XSSFCell awayRushOTitle = ranksTitle.createCell(0);
@@ -53,7 +71,8 @@ public class FileWriter {
 			awayPassOTitle.setCellValue("Offense Pass Rank");
 			homePassOTitle.setCellValue("Offense Pass Rank");
 			awayPassDTitle.setCellValue("Defense Pass Rank");
-			homePassDTitle.setCellValue("Defense Pass Rank");
+			homePassDTitle.setCellValue("Defense Pass Rank");		
+			applyStyleToRange(sheet, boldStyle, 3, 0, 3, 14);
 			
 			XSSFRow ranks = sheet.createRow(4);
 			XSSFCell awayRushO = ranks.createCell(0);
@@ -72,6 +91,7 @@ public class FileWriter {
 			homePassO.setCellValue(matchup.getHome().getoPassRank());
 			awayPassD.setCellValue(matchup.getAway().getdPassRank());
 			homePassD.setCellValue(matchup.getHome().getdPassRank());
+			applyStyleToRange(sheet, centerStyle, 4, 0, 4, 14);
 			
 			XSSFRow fpRanksTitle = sheet.createRow(6);
 			XSSFCell awayQBRankTitle = fpRanksTitle.createCell(0);
@@ -98,6 +118,7 @@ public class FileWriter {
 			homeKRankTitle.setCellValue("Points to K");
 			awayDefRankTitle.setCellValue("Points to Def");
 			homeDefRankTitle.setCellValue("Points to Def");
+			applyStyleToRange(sheet, boldStyle, 6, 0, 6, 16);
 			
 			XSSFRow fpRanks = sheet.createRow(7);
 			XSSFCell awayQBRank = fpRanks.createCell(0);
@@ -124,6 +145,7 @@ public class FileWriter {
 			homeKRank.setCellValue(matchup.getHome().getFpToKRank());
 			awayDefRank.setCellValue(matchup.getAway().getFpToDefRank());
 			homeDefRank.setCellValue(matchup.getHome().getFpToDefRank());
+			applyStyleToRange(sheet, centerStyle, 7, 0, 7, 16);
 			
 			XSSFRow qbTitle = sheet.createRow(9);
 			XSSFCell awayQBNameTitle = qbTitle.createCell(0);
@@ -158,6 +180,7 @@ public class FileWriter {
 			homeQBTdTitle.setCellValue("Td");
 			awayQBPicksTitle.setCellValue("Picks");
 			homeQBPicksTitle.setCellValue("Picks");
+			applyStyleToRange(sheet, boldStyle, 9, 0, 9, 18);
 			
 			XSSFRow qb = sheet.createRow(10);
 			XSSFCell awayQBName = qb.createCell(0);
@@ -192,6 +215,7 @@ public class FileWriter {
 			homeQBTd.setCellValue(matchup.getHome().getStartingQB().getTd());
 			awayQBPicks.setCellValue(matchup.getAway().getStartingQB().getPicks());
 			homeQBPicks.setCellValue(matchup.getHome().getStartingQB().getPicks());
+			applyStyleToRange(sheet, centerStyle, 10, 0, 10, 18);
 			
 			XSSFRow rbTitle = sheet.createRow(12);
 			XSSFCell awayRBNameTitle = rbTitle.createCell(0);
@@ -222,6 +246,7 @@ public class FileWriter {
 			homeRBTdTitle.setCellValue("Td");
 			awayRBYpgTitle.setCellValue("Ypg");
 			homeRBYpgTitle.setCellValue("Ypg");
+			applyStyleToRange(sheet, boldStyle, 12, 0, 12, 17);
 			
 			int rowCounter = 13;
 			int iteration = 1;
@@ -263,6 +288,7 @@ public class FileWriter {
 						homeRBTd.setCellValue(homeRB.getTd());
 						homeRBYpg.setCellValue(homeRB.getYpg());
 					}
+					applyStyleToRange(sheet, centerStyle, rowCounter, 0, rowCounter, 17);
 					rowCounter++;
 					iteration++;
 				}
@@ -301,6 +327,7 @@ public class FileWriter {
 						awayRBTd.setCellValue(awayRB.getTd());
 						awayRBYpg.setCellValue(awayRB.getYpg());
 					}
+					applyStyleToRange(sheet, centerStyle, rowCounter, 0, rowCounter, 17);
 					rowCounter++;
 					iteration++;
 				}
@@ -343,6 +370,7 @@ public class FileWriter {
 			homeWRYpgTitle.setCellValue("Ypg");
 			awayWRYacTitle.setCellValue("Yac");
 			homeWRYacTitle.setCellValue("Yac");
+			applyStyleToRange(sheet, boldStyle, rowCounter, 0, rowCounter, 19);
 			
 			rowCounter++;
 			iteration = 1;
@@ -392,6 +420,7 @@ public class FileWriter {
 						homeWRYpg.setCellValue(homeWR.getYpg());
 						homeWRYac.setCellValue(homeWR.getYac());
 					}
+					applyStyleToRange(sheet, centerStyle, rowCounter, 0, rowCounter, 19);
 					rowCounter++;
 					iteration++;
 				}
@@ -438,10 +467,73 @@ public class FileWriter {
 						awayWRYpg.setCellValue(awayWR.getYpg());
 						awayWRYac.setCellValue(awayWR.getYac());
 					}
+					applyStyleToRange(sheet, centerStyle, rowCounter, 0, rowCounter, 19);
 					rowCounter++;
 					iteration++;
 				}
 			}
+			sheet.autoSizeColumn(0);
+			sheet.autoSizeColumn(1);
+			sheet.autoSizeColumn(2);
+			sheet.autoSizeColumn(3);
+			sheet.autoSizeColumn(4);
+			sheet.autoSizeColumn(5);
+			sheet.autoSizeColumn(6);
+			sheet.autoSizeColumn(7);
+			sheet.autoSizeColumn(8);
+			sheet.autoSizeColumn(9);
+			sheet.autoSizeColumn(10);
+			sheet.autoSizeColumn(11);
+			sheet.autoSizeColumn(12);
+			sheet.autoSizeColumn(13);
+			sheet.autoSizeColumn(14);
+			sheet.autoSizeColumn(15);
+			sheet.autoSizeColumn(16);
+			sheet.autoSizeColumn(17);
+			sheet.autoSizeColumn(18);
+			sheet.autoSizeColumn(19);
+			
+			/*
+			 * #######################################################################
+			 * Experimental styling code begins here
+			 * #######################################################################
+			 */
+			
+			int homePassingRank = matchup.getHome().getoPassRank();
+			int homeRushingRank = matchup.getHome().getoRushRank();
+			//int homePassingRankD = matchup.getHome().getdPassRank();
+			//int homeRushingRankD = matchup.getHome().getdRushRank();
+			int homeFpQB = matchup.getHome().getFpToQBRank();
+			int homeFpRB = matchup.getHome().getFpToRBRank();
+			int homeFpWR = matchup.getHome().getFpToWRRank();
+			int homeFpTE = matchup.getHome().getFpToTERank();
+			
+			int awayPassingRank = matchup.getAway().getoPassRank();
+			int awayRushingRank = matchup.getAway().getoRushRank();
+			//int awayPassingRankD = matchup.getAway().getdPassRank();
+			//int awayRushingRankD = matchup.getAway().getdRushRank();
+			int awayFpQB = matchup.getAway().getFpToQBRank();
+			int awayFpRB = matchup.getAway().getFpToRBRank();
+			int awayFpWR = matchup.getAway().getFpToWRRank();
+			int awayFpTE = matchup.getAway().getFpToTERank();
+			XSSFColor tabColor = new XSSFColor(Color.YELLOW);
+			
+			if(homePassingRank <= 15 && (awayFpQB <= 5 || awayFpWR <= 5 || awayFpTE <= 5)) {
+				sheet.setTabColor(tabColor);
+			} else if(homeRushingRank <= 15 && awayFpRB <= 5) {
+				sheet.setTabColor(tabColor);
+			} else if(awayPassingRank <= 15 && (homeFpQB <= 5 || homeFpWR <= 5 || homeFpTE <= 5)) {
+				sheet.setTabColor(tabColor);
+			} else if(awayRushingRank <= 15 && homeFpRB <= 5) {
+				sheet.setTabColor(tabColor);
+			}
+			
+			/*
+			 * #######################################################################
+			 * Experimental styling code ends here
+			 * #######################################################################
+			 */
+			
 		}
 		
 		FileOutputStream fileOut = null;
@@ -459,5 +551,21 @@ public class FileWriter {
 				wb.close();
 			}
 		}
+	}
+	
+	public static void applyStyleToRange(XSSFSheet sheet, XSSFCellStyle style, int rowStart, int colStart, int rowEnd, int colEnd) {
+	    for (int r = rowStart; r <= rowEnd; r++) {
+	        for (int c = colStart; c <= colEnd; c++) {
+	            XSSFRow row = sheet.getRow(r);
+
+	            if (row != null) {
+	                XSSFCell cell = row.getCell(c);
+
+	                if (cell != null) {
+	                    cell.setCellStyle(style);
+	                }
+	            }
+	        }
+	    }
 	}
 }
