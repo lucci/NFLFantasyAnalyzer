@@ -65,7 +65,9 @@ public class WebScraper {
 		Elements recordResults = recAndPlayerURL.select("div[class=sub-title]");
 		String record = recordResults.get(0).text();
 		team.setWin(Integer.parseInt(record.substring(0, record.indexOf('-'))));
-		team.setLoss(Integer.parseInt(record.substring(record.indexOf('-') + 1, record.indexOf(','))));
+		// Need to correct this so that it can account for ties in the record
+		//team.setLoss(Integer.parseInt(record.substring(record.indexOf('-') + 1, record.indexOf(','))));
+		team.setLoss(Integer.parseInt(record.substring(record.indexOf('-') + 1, record.indexOf('-') + 2)));
 	}
 	
 	// populates the top players for the team
@@ -457,7 +459,15 @@ public class WebScraper {
 		    			
 		    				if (cols.get(2).text().contains("@")) {
 		    					for (Team t : teams) {
-		    						if (t.getCity().equalsIgnoreCase(teamTwo)) {
+		    						if (t.getCity().equalsIgnoreCase("Los Angeles") || t.getCity().equalsIgnoreCase("New York")) {
+		    							String tempForDup = t.getCity() + " " + t.getName();
+		    							if (tempForDup.equalsIgnoreCase(teamTwo)) {
+		    								team.setMatchedUp(true);
+			    							t.setMatchedUp(true);
+			    							matchup = new Matchup(team, t);
+		    							}
+		    						}
+		    						else if (t.getCity().equalsIgnoreCase(teamTwo)) {
 		    							team.setMatchedUp(true);
 		    							t.setMatchedUp(true);
 		    							matchup = new Matchup(team, t);
@@ -465,7 +475,15 @@ public class WebScraper {
 		    					}
 		    				} else {
 		    					for (Team t : teams) {
-		    						if (t.getCity().equalsIgnoreCase(teamTwo)) {
+		    						if (t.getCity().equalsIgnoreCase("Los Angeles") || t.getCity().equalsIgnoreCase("New York")) {
+		    							String tempForDup = t.getCity() + " " + t.getName();
+		    							if (tempForDup.equalsIgnoreCase(teamTwo)) {
+			    							team.setMatchedUp(true);
+			    							t.setMatchedUp(true);
+			    							matchup = new Matchup(t, team);
+		    							}
+		    						}
+		    						else if (t.getCity().equalsIgnoreCase(teamTwo)) {
 		    							team.setMatchedUp(true);
 		    							t.setMatchedUp(true);
 		    							matchup = new Matchup(t, team);
