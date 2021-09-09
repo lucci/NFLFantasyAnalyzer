@@ -23,7 +23,7 @@ public class FileWriter {
 	public static void writeXLSXFile(ArrayList<Matchup> matchups) throws IOException {
 		
 		// absolute path to where the file should be written - use the .xlsx extension
-		String excelFileName = "/Users/Mike/Desktop/Matchups.xlsx";
+		String excelFileName = "/Users/mcolu/Desktop/Matchups.xlsx";
 
 		XSSFWorkbook wb = new XSSFWorkbook();
 		
