@@ -22,7 +22,7 @@ public class FantasyAnalyzer {
 		ArrayList<Team> teams = new ArrayList<Team>();
 		teams.add(new Team("New England", "NE", "Patriots"));
 		teams.add(new Team("Dallas", "Dal", "Cowboys"));
-		teams.add(new Team("Oakland", "Oak", "Raiders"));
+		teams.add(new Team("Las Vegas", "LV", "Raiders"));
 		teams.add(new Team("Philadelphia", "Phi", "Eagles"));
 		teams.add(new Team("New York", "NYG", "Giants"));
 		teams.add(new Team("Seattle", "Sea", "Seahawks"));
@@ -64,16 +64,16 @@ public class FantasyAnalyzer {
 				System.exit(1);
 			}
 			scraper.populateRecord(team);
-			scraper.populateTopPlayers(team);
+			scraper._populateTopPlayers(team);
 		}
 		scraper.destroyRecordAndTopPlayerURL();
 		
 		// initialize URLs for the logic after
 		try {
-			scraper.initializeOverallRankURLs("http://www.espn.com/nfl/statistics/team/_/stat/passing", 
-					"http://www.espn.com/nfl/statistics/team/_/stat/passing/position/defense", 
-					"http://www.espn.com/nfl/statistics/team/_/stat/rushing", 
-					"http://www.espn.com/nfl/statistics/team/_/stat/rushing/position/defense");
+			scraper.initializeOverallRankURLs("https://www.espn.com/nfl/stats/team/_/table/passing/sort/netPassingYardsPerGame/dir/desc",
+					"https://www.espn.com/nfl/stats/team/_/view/defense/table/passing/sort/netPassingYardsPerGame/dir/asc",
+					"https://www.espn.com/nfl/stats/team/_/table/rushing/sort/rushingYardsPerGame/dir/desc",
+					"https://www.espn.com/nfl/stats/team/_/view/defense/table/rushing/sort/rushingYardsPerGame/dir/asc");
 		} catch(IOException e) {
 			System.out.println(e.getMessage());
 			System.exit(1);
@@ -87,12 +87,12 @@ public class FantasyAnalyzer {
 		
 		// initialize URLs for the logic after
 		try {
-			scraper.initializePointsGivenToPositionURLS("http://games.espn.com/ffl/pointsagainst?positionId=1&statview=averages",
-					"http://games.espn.com/ffl/pointsagainst?positionId=2&statview=averages",
-					"http://games.espn.com/ffl/pointsagainst?positionId=3&statview=averages",
-					"http://games.espn.com/ffl/pointsagainst?positionId=4&statview=averages",
-					"http://games.espn.com/ffl/pointsagainst?positionId=5&statview=averages",
-					"http://games.espn.com/ffl/pointsagainst?positionId=16&statview=averages");
+			scraper.initializePointsGivenToPositionURLS("https://football.fantasysports.yahoo.com/f1/pointsagainst?season=2020&pos=QB&mode=average",
+					"https://football.fantasysports.yahoo.com/f1/pointsagainst?season=2020&pos=RB&mode=average",
+					"https://football.fantasysports.yahoo.com/f1/pointsagainst?season=2020&pos=WR&mode=average",
+					"https://football.fantasysports.yahoo.com/f1/pointsagainst?season=2020&pos=TE&mode=average",
+					"https://football.fantasysports.yahoo.com/f1/pointsagainst?season=2020&pos=K&mode=average",
+					"https://football.fantasysports.yahoo.com/f1/pointsagainst?season=2020&pos=DEF&mode=average");
 		} catch(IOException e) {
 			System.out.println(e.getMessage());
 			System.exit(1);
@@ -101,8 +101,15 @@ public class FantasyAnalyzer {
 		// ArrayList containing matchups
 		ArrayList<Matchup> matchups = new ArrayList<Matchup>();
 		Matchup matchup = null;
-		
-		// populate fantasy points allowed to each position
+
+		try {
+			scraper.initializeMatchupsURL("https://www.espn.com/nfl/schedule");
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+			System.exit(1);
+		}
+
+		// populate fantasy points allowed to each position and create match ups
 		for (Team team : teams) {
 			scraper.populatePointsGivenToQB(team);
 			scraper.populatePointsGivenToRB(team);
@@ -110,13 +117,15 @@ public class FantasyAnalyzer {
 			scraper.populatePointsGivenToTE(team);
 			scraper.populatePointsGivenToK(team);
 			scraper.populatePointsGivenToDef(team);
-			matchup = scraper.createMatchup(team, teams, am);
+			matchup = scraper._createMatchup(team, teams, am);
 			
 			if (matchup != null) {
 				matchups.add(matchup);
 			}
 		}
 		scraper.destroyPointsGivenToPositionURLS();
+		scraper.destroyMatchupsURL();
+
 		try {
 			FileWriter.writeXLSXFile(matchups);
 		} catch (IOException e) {
